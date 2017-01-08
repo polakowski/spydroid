@@ -1,36 +1,37 @@
 import React, { Component } from 'react';
-import { AppRegistry, Navigator } from 'react-native';
+import { AppRegistry, Navigator, Text } from 'react-native';
 
-import MainScene from './scenes/MainScene';
+import MainMenu from './scenes/MainMenu';
+import PlayersSetup from './scenes/PlayersSetup';
+import RevealCards from './scenes/RevealCards';
 
 class spydroid extends Component {
+  constructor() {
+    super();
+    this.routes = [
+      { id: 'index' }
+    ]
+  }
+
   render() {
     return (
       <Navigator
-        initialRoute={{ title: 'Initial Scene', index: 0 }}
-        renderScene={(route, navigator) =>
-          <MainScene
-            title={route.title}
-
-            // Function to call when a new scene should be displayed
-            onForward={() => {
-              const nextIndex = route.index + 1;
-              navigator.push({
-                title: 'Scene ' + nextIndex,
-                index: nextIndex,
-              });
-            }}
-
-            // Function to call to go back to the previous scene
-            onBack={() => {
-              if (route.index > 0) {
-                navigator.pop();
-              }
-            }}
-          />
-        }
+        initialRoute={this.routes[0]}
+        initialRouteStack={this.routes}
+        renderScene={this.navigatorRenderScene.bind(this)}
       />
     )
+  }
+
+  navigatorRenderScene(route, nav) {
+    switch (route.id) {
+      case 'index':
+        return (<MainMenu nav={nav} />)
+      case 'playersSetup':
+        return (<PlayersSetup nav={nav}/>)
+      case 'revealCards':
+        return (<RevealCards nav={nav} gameData={route.gameData} />)
+    }
   }
 }
 

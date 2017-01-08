@@ -1,0 +1,26 @@
+import React, { Component } from 'react';
+import { Text, StyleSheet } from 'react-native';
+
+export default class Label extends Component {
+  defaultProps() {
+    return {
+      text: 'Lorem ipsum'
+    }
+  }
+
+  render() {
+    return (
+      <Text style={styles.title}>
+        {this.props.text}
+      </Text>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 16,
+    marginBottom: 25,
+    marginHorizontal: 50
+  }
+})
