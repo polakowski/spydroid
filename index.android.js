@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { AppRegistry, Navigator, Text } from 'react-native';
 
 import MainMenu from './scenes/MainMenu';
-import PlayersSetup from './scenes/PlayersSetup';
-import RevealCards from './scenes/RevealCards';
+import NewGame from './scenes/NewGame';
+import GameLobby from './scenes/GameLobby';
+import JoinGame from './scenes/JoinGame';
 
 class spydroid extends Component {
   constructor() {
@@ -27,10 +28,12 @@ class spydroid extends Component {
     switch (route.id) {
       case 'index':
         return (<MainMenu nav={nav} />)
-      case 'playersSetup':
-        return (<PlayersSetup nav={nav}/>)
-      case 'revealCards':
-        return (<RevealCards nav={nav} gameData={route.gameData} />)
+      case 'newGame':
+        return (<NewGame nav={nav} />)
+      case 'joinGame':
+        return (<JoinGame nav={nav} />)
+      case 'gameLobby':
+        return (<GameLobby nav={nav} game={route.game} playerName={route.playerName} />)
     }
   }
 }

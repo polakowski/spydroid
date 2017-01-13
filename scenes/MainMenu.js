@@ -15,7 +15,8 @@ export default class MainScene extends Component {
    super(props);
    this.state = {
      titles: {
-       newGame: 'New game',
+       newGame: 'Create new game',
+       joinGame: 'Join game',
        exit: 'Quit Application'
      }
    };
@@ -24,9 +25,10 @@ export default class MainScene extends Component {
   render() {
     titles = this.state.titles
     return (
-      <View style={styles.buttonsWrapper}>
+      <View>
         <Title text='Spydroid.' />
-        <CenterButton text={titles.newGame} onPress={this.goToRoute.bind(this, 'playersSetup')} />
+        <CenterButton text={titles.newGame} onPress={this.goToRoute.bind(this, 'newGame')} />
+        <CenterButton text={titles.joinGame} onPress={this.goToRoute.bind(this, 'joinGame')} />
         <CenterButton text={titles.exit} onPress={BackAndroid.exitApp} />
       </View>
     )
@@ -38,7 +40,5 @@ export default class MainScene extends Component {
 }
 
 const styles = StyleSheet.create({
-  buttonsWrapper: {
-    paddingHorizontal: 50
-  }
+
 })

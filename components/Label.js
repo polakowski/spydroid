@@ -20,7 +20,7 @@ export default class Label extends Component {
 const styles = StyleSheet.create({
   title: {
     fontSize: 16,
-    marginBottom: 25,
+    marginBottom: 10,
     marginHorizontal: 50
   }
 })

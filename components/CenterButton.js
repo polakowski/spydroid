@@ -15,6 +15,7 @@ export default class CenterButton extends Component {
           title={this.props.text}
           onPress={this.props.onPress}
           style={styles.button}
+          disabled={this.props.disabled}
         />
       </View>
     )
@@ -24,9 +25,10 @@ export default class CenterButton extends Component {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    paddingBottom: 20
+    paddingBottom: 20,
+    marginHorizontal: 50
   },
   button: {
-    
+
   }
 })

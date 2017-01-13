@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableHighlight, Text } from 'react-native';
+import { StyleSheet, View, Button, Text } from 'react-native';
 
 export default class BottomNav extends Component {
   defaultProps() {
@@ -10,16 +10,8 @@ export default class BottomNav extends Component {
   render() {
     return (
       <View style={styles.wrapper}>
-        <TouchableHighlight onPress={this.props.leftOnPress.bind(this)}>
-          <Text style={styles.navText}>
-            {this.props.leftText}
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this.props.rightOnPress.bind(this)}>
-          <Text style={styles.navText}>
-            {this.props.rightText}
-          </Text>
-        </TouchableHighlight>
+        <Button title={this.props.leftText} onPress={this.props.leftOnPress.bind(this)} />
+        <Button title={this.props.rightText} onPress={this.props.rightOnPress.bind(this)} />
       </View>
     )
   }
