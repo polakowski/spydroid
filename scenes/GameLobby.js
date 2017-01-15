@@ -7,6 +7,8 @@ import CenterButton from '../components/CenterButton'
 import CustomInput from '../components/CustomInput'
 import LobbyPlayersList from '../components/LobbyPlayersList'
 
+var Env = require('../env.js')
+
 export default class GameLobby extends Component {
   constructor(props) {
     super(props);
@@ -16,9 +18,8 @@ export default class GameLobby extends Component {
   }
 
   componentWillMount() {
-    this.socket = new WebSocket('ws://192.168.55.105:8001/');
+    this.socket = new WebSocket('ws://' + Env.SERVER_URL + ':8001/');
     this.socket.onopen = () => {
-      this.setState({ socket: 'connected' });
       message = {
         type: 'playerJoinedGame',
         token: this.props.game.token,
@@ -28,8 +29,13 @@ export default class GameLobby extends Component {
     };
     this.socket.onmessage = (message) => {
       messageJson = JSON.parse(message.data);
-      if (messageJson.type == 'playersInGame') {
-        this.setState({ players: messageJson.players })
+      switch (messageJson.type) {
+        case 'playersInGame':
+          this.setState({ players: messageJson.players });
+          break;
+        case 'gameHasStarted':
+          this.gameHasStarted(messageJson);
+          break;
       }
     };
   }
@@ -48,10 +54,25 @@ export default class GameLobby extends Component {
 
   actionButton() {
     if (this.props.game.adminToken) {
-      return (<CenterButton text='Start game' onPress={() => 1} />)
+      return (<CenterButton text='Start game' onPress={this.adminGameStart.bind(this)} />)
     } else {
       return (<CenterButton text='I am ready!' onPress={() => 1} disabled={true}/>)
     }
+  }
+
+  adminGameStart() {
+    message = {
+      type: 'adminGameStart',
+      adminToken: this.props.game.adminToken
+    }
+    this.socket.send(JSON.stringify(message));
+  }
+
+  gameHasStarted(message) {
+    var placeName = message.placeName;
+    var isSpy = message.isSpy;
+    var gameData = { placeName: placeName, isSpy: isSpy }
+    this.props.nav.replace({ id: 'revealCard', socket: this.socket, gameData: gameData });
   }
 }
 

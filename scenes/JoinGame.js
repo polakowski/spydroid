@@ -5,6 +5,8 @@ import Title from '../components/Title'
 import CustomInput from '../components/CustomInput'
 import CenterButton from '../components/CenterButton'
 
+var Env = require('../env.js')
+
 export default class JoinGame extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +41,7 @@ export default class JoinGame extends Component {
       })
     }
 
-    fetch('http://192.168.55.105:5000/api/connections', obj)
+    fetch('http://' + Env.SERVER_URL + ':5000/api/connections', obj)
     .then((response) => response.json())
     .then((response) => {
       this.props.nav.replace({ id: 'gameLobby', game: response, playerName: playerName })

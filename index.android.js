@@ -5,6 +5,7 @@ import MainMenu from './scenes/MainMenu';
 import NewGame from './scenes/NewGame';
 import GameLobby from './scenes/GameLobby';
 import JoinGame from './scenes/JoinGame';
+import RevealCard from './scenes/RevealCard';
 
 class spydroid extends Component {
   constructor() {
@@ -34,6 +35,8 @@ class spydroid extends Component {
         return (<JoinGame nav={nav} />)
       case 'gameLobby':
         return (<GameLobby nav={nav} game={route.game} playerName={route.playerName} />)
+      case 'revealCard':
+        return (<RevealCard nav={nav} socket={route.socket} gameData={route.gameData}/>)
     }
   }
 }

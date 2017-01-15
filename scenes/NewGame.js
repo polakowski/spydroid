@@ -6,6 +6,8 @@ import BottomNav from '../components/BottomNav'
 import CustomInput from '../components/CustomInput'
 import ModalInfo from '../components/ModalInfo'
 
+var Env = require('../env.js')
+
 export default class PlayersSetup extends Component {
   constructor(props) {
     super(props);
@@ -56,7 +58,7 @@ export default class PlayersSetup extends Component {
       })
     }
 
-    fetch('http://192.168.55.105:5000/api/games/', obj)
+    fetch('http://' + Env.SERVER_URL + ':5000/api/games/', obj)
     .then((response) => response.json())
     .then((response) => {
       // this.setState({ creating: false })
