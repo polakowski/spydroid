@@ -41,7 +41,7 @@ export default class JoinGame extends Component {
       })
     }
 
-    fetch('http://' + Env.SERVER_URL + ':5000/api/connections', obj)
+    fetch('http://' + Env.SERVER_URL + '/api/connections', obj)
     .then((response) => response.json())
     .then((response) => {
       this.props.nav.replace({ id: 'gameLobby', game: response, playerName: playerName })

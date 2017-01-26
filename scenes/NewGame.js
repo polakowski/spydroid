@@ -58,7 +58,7 @@ export default class PlayersSetup extends Component {
       })
     }
 
-    fetch('http://' + Env.SERVER_URL + ':5000/api/games/', obj)
+    fetch('http://' + Env.SERVER_URL + '/api/games/', obj)
     .then((response) => response.json())
     .then((response) => {
       // this.setState({ creating: false })
