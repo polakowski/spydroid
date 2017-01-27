@@ -8,6 +8,7 @@ export default class LobbyPlayersList extends Component {
 
   render() {
     var playerName = this.props.player.name;
+    if (this.props.player.ready) { playerName += ' (ready)' }
     return (
       <View style={styles.wrapper}>
         <Text style={styles.text}>

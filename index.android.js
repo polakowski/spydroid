@@ -34,7 +34,7 @@ class spydroid extends Component {
       case 'joinGame':
         return (<JoinGame nav={nav} />)
       case 'gameLobby':
-        return (<GameLobby nav={nav} game={route.game} playerName={route.playerName} />)
+        return (<GameLobby nav={nav} game={route.game} user={route.user} />)
       case 'revealCard':
         return (<RevealCard nav={nav} socket={route.socket} gameData={route.gameData}/>)
     }

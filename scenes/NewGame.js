@@ -52,7 +52,7 @@ export default class PlayersSetup extends Component {
     fetch(Env.SERVER_URI + '/api/games/', obj)
     .then((response) => response.json())
     .then((response) => {
-      this.props.nav.replace({ id: 'gameLobby', game: response, playerName: response.creatorName })
+      this.props.nav.replace({ id: 'gameLobby', game: response.game, user: response.user })
     })
   }
 }

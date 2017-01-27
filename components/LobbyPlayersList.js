@@ -13,7 +13,7 @@ export default class LobbyPlayersList extends Component {
     var list = [];
     for (var i = 0; i < this.props.players.length; i++) {
       player = this.props.players[i];
-      list.push(<LobbyPlayer player={player} key={player.name} />)
+      list.push(<LobbyPlayer player={player} key={player.id} />)
     }
     return (
       <View>

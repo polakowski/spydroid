@@ -29,7 +29,6 @@ export default class JoinGame extends Component {
 
   joinGame() {
     this.setState({ btnDisabled: true });
-    var playerName = this.state.playerName;
     var obj = {
       method: 'POST',
       headers: {
@@ -37,7 +36,8 @@ export default class JoinGame extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        token: this.state.token
+        token: this.state.token,
+        playerName: this.state.playerName
       })
     }
 
@@ -45,7 +45,7 @@ export default class JoinGame extends Component {
     .then((response) => response.json())
     .then((response) => {
       if (!response.error) {
-        this.props.nav.replace({ id: 'gameLobby', game: response, playerName: playerName })
+        this.props.nav.replace({ id: 'gameLobby', game: response.game, user: response.user })
       } else {
         Alert.alert('Error', response.error)
         this.setState({ btnDisabled: false })

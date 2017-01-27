@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import SocketIO from 'react-native-socketio';
 
 import Title from '../components/Title'
@@ -9,11 +9,13 @@ import CustomInput from '../components/CustomInput'
 import LobbyPlayersList from '../components/LobbyPlayersList'
 
 var Env = require('../env.js')
+var _ = require('lodash')
 
 export default class GameLobby extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ready: false,
       players: []
     }
   }
@@ -24,7 +26,8 @@ export default class GameLobby extends Component {
 
     this.socket.emit('playerJoinedGame', {
       token: this.props.game.token,
-      playerName: this.props.playerName
+      playerName: this.props.user.name,
+      playerId: this.props.user.id
     })
 
     this.socket.on('gameHasStarted', (data) => {
@@ -33,6 +36,13 @@ export default class GameLobby extends Component {
 
     this.socket.on('playersInGame', (data) => {
       this.setState({ players: data[0].players });
+    })
+
+    this.socket.on('playerReady', (data) => {
+      // let player = this.state.players.find((player) => { return player.id == data[0].playerId })
+      // player.ready = true
+      // if (player.id == this.props.user.id) { this.setState({ ready: true }) }
+      // this.setState({ players: this.state.players })
     })
   }
 
@@ -49,11 +59,18 @@ export default class GameLobby extends Component {
   }
 
   actionButton() {
-    if (this.props.game.adminToken) {
+    if (this.state.everyoneReady && this.props.game.adminToken) {
       return (<CenterButton text='Start game' onPress={this.adminGameStart.bind(this)} />)
     } else {
-      return (<CenterButton text='I am ready!' onPress={() => 1} disabled={true}/>)
+      return (<CenterButton text='I am ready!' onPress={this.getReady.bind(this)} disabled={this.state.ready}/>)
     }
+  }
+
+  getReady() {
+    this.socket.emit('playerReady', {
+      token: this.props.game.token,
+      playerId: this.props.user.id
+    })
   }
 
   adminGameStart() {
