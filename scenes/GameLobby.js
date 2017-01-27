@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import SocketIO from 'react-native-socketio';
 
 import Title from '../components/Title'
 import Label from '../components/Label'
@@ -17,27 +18,22 @@ export default class GameLobby extends Component {
     }
   }
 
-  componentWillMount() {
-    this.socket = new WebSocket('ws://' + Env.SERVER_URL + ':8001/');
-    this.socket.onopen = () => {
-      message = {
-        type: 'playerJoinedGame',
-        token: this.props.game.token,
-        playerName: this.props.playerName
-      };
-      this.socket.send(JSON.stringify(message));
-    };
-    this.socket.onmessage = (message) => {
-      messageJson = JSON.parse(message.data);
-      switch (messageJson.type) {
-        case 'playersInGame':
-          this.setState({ players: messageJson.players });
-          break;
-        case 'gameHasStarted':
-          this.gameHasStarted(messageJson);
-          break;
-      }
-    };
+  componentDidMount() {
+    this.socket = new SocketIO(Env.SERVER_URI);
+    this.socket.connect();
+
+    this.socket.emit('playerJoinedGame', {
+      token: this.props.game.token,
+      playerName: this.props.playerName
+    })
+
+    this.socket.on('gameHasStarted', (data) => {
+      this.gameHasStarted(data[0])
+    })
+
+    this.socket.on('playersInGame', (data) => {
+      this.setState({ players: data[0].players });
+    })
   }
 
   render() {
@@ -61,16 +57,12 @@ export default class GameLobby extends Component {
   }
 
   adminGameStart() {
-    message = {
-      type: 'adminGameStart',
-      adminToken: this.props.game.adminToken
-    }
-    this.socket.send(JSON.stringify(message));
+    this.socket.emit('adminGameStart', { adminToken: this.props.game.adminToken });
   }
 
-  gameHasStarted(message) {
-    var placeName = message.placeName;
-    var isSpy = message.isSpy;
+  gameHasStarted(data) {
+    var placeName = data.placeName;
+    var isSpy = data.isSpy;
     var gameData = { placeName: placeName, isSpy: isSpy }
     this.props.nav.replace({ id: 'revealCard', socket: this.socket, gameData: gameData });
   }

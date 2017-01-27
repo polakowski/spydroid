@@ -42,7 +42,6 @@ export default class PlayersSetup extends Component {
   }
 
   goToLobby() {
-    // this.setState({ creating: true })
     this.createGame()
   }
 
@@ -58,10 +57,9 @@ export default class PlayersSetup extends Component {
       })
     }
 
-    fetch('http://' + Env.SERVER_URL + '/api/games/', obj)
+    fetch(Env.SERVER_URI + '/api/games/', obj)
     .then((response) => response.json())
     .then((response) => {
-      // this.setState({ creating: false })
       this.props.nav.replace({ id: 'gameLobby', game: response, playerName: response.creatorName })
     })
   }

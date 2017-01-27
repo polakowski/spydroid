@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { BackAndroid, View, StyleSheet } from 'react-native';
+import { BackAndroid, View, StyleSheet, Alert } from 'react-native';
+import SocketIO from 'react-native-socketio';
 
 import Title from '../components/Title';
 import CenterButton from '../components/CenterButton';
+
+var Env = require('../env.js')
 
 export default class MainScene extends Component {
   static get defaultProps() {
@@ -12,14 +15,14 @@ export default class MainScene extends Component {
   }
 
   constructor(props) {
-   super(props);
-   this.state = {
-     titles: {
-       newGame: 'Create new game',
-       joinGame: 'Join game',
-       exit: 'Quit Application'
-     }
-   };
+    super(props);
+    this.state = {
+      titles: {
+        newGame: 'Create new game',
+        joinGame: 'Join game',
+        exit: 'Quit Application'
+      }
+    };
   }
 
   render() {

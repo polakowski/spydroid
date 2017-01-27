@@ -22,8 +22,6 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        // new VectorIconsPackage(),
-        // new OrientationPackage(this),
         new SocketIoPackage()
       );
     }
