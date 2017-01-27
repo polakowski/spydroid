@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 
 import Title from '../components/Title'
 import CustomInput from '../components/CustomInput'
@@ -19,10 +19,10 @@ export default class JoinGame extends Component {
     return (
       <View>
         <Title text='Join game' />
-        <CustomInput label='Game access key' name={'token'} parent={this} />
-        <CustomInput label='Your name' name={'playerName'} parent={this} />
-        <CenterButton text='Join game' onPress={this.joinGame.bind(this)} disabled={this.state.btnDisabled} />
-        <CenterButton text='Go back' onPress={() => this.props.nav.replace({ id: 'index' })} />
+        <CustomInput label='Game access key' name='token' parent={this} />
+        <CustomInput label='Your name' name='playerName' parent={this} />
+        <CenterButton text='Join game' onPress={this.joinGame.bind(this)} disabled={this.btnDisabled} />
+        <CenterButton text='Back' onPress={() => this.props.nav.replace({ id: 'index' })} type='cancel' />
       </View>
     )
   }
@@ -44,7 +44,12 @@ export default class JoinGame extends Component {
     fetch(Env.SERVER_URI + '/api/connections', obj)
     .then((response) => response.json())
     .then((response) => {
-      this.props.nav.replace({ id: 'gameLobby', game: response, playerName: playerName })
+      if (!response.error) {
+        this.props.nav.replace({ id: 'gameLobby', game: response, playerName: playerName })
+      } else {
+        Alert.alert('Error', response.error)
+        this.setState({ btnDisabled: false })
+      }
     })
   }
 }

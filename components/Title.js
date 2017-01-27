@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import { Text, StyleSheet } from 'react-native';
 
 export default class Title extends Component {
-  defaultProps() {
-    return {
-      text: 'Unknown Title'
-    }
-  }
-
   render() {
     return (
       <Text style={styles.title}>

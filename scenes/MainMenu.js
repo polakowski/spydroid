@@ -8,12 +8,6 @@ import CenterButton from '../components/CenterButton';
 var Env = require('../env.js')
 
 export default class MainScene extends Component {
-  static get defaultProps() {
-    return {
-      title: 'Initial Scene'
-    };
-  }
-
   constructor(props) {
     super(props);
     this.state = {

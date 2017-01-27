@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Navigator, Button, TextInput } from 'react-native';
+import { KeyboardAvoidingView, Text, Navigator, Button, TextInput } from 'react-native';
 
 import Title from '../components/Title'
-import BottomNav from '../components/BottomNav'
+import CenterButton from '../components/CenterButton'
 import CustomInput from '../components/CustomInput'
 import ModalInfo from '../components/ModalInfo'
 
@@ -19,17 +19,13 @@ export default class PlayersSetup extends Component {
 
   render() {
     return (
-      <View>
+      <KeyboardAvoidingView>
         <Title text='Create new game' />
         <CustomInput label='Your name' name={'playerName'} parent={this} />
         <ModalInfo text='Creating game...' parent={this} id='creating' />
-        <BottomNav
-          leftText='Back'
-          leftOnPress={this.goToMainMenu.bind(this)}
-          rightText='Submit'
-          rightOnPress={this.goToLobby.bind(this)}
-        />
-      </View>
+        <CenterButton text='Create game' onPress={this.createGame.bind(this)} type='primary'/>
+        <CenterButton text='Back' onPress={this.goToMainMenu.bind(this)} type='cancel' />
+      </KeyboardAvoidingView>
     )
   }
 
@@ -39,10 +35,6 @@ export default class PlayersSetup extends Component {
 
   goToMainMenu() {
     this.props.nav.replace({ id: 'index' })
-  }
-
-  goToLobby() {
-    this.createGame()
   }
 
   createGame() {

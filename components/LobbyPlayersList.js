@@ -5,12 +5,6 @@ import Label from './Label'
 import LobbyPlayer from './LobbyPlayer'
 
 export default class LobbyPlayersList extends Component {
-  static get defaultProps() {
-    return {
-
-    }
-  }
-
   constructor(props) {
     super(props);
   }

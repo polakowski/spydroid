@@ -4,12 +4,6 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import Label from '../components/Label'
 
 export default class CustomInput extends Component {
-  defaultProps() {
-    return {
-      label: ''
-    }
-  }
-
   constructor(props) {
     super(props);
     this.state = {

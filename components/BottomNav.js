@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Button, Text } from 'react-native';
 
 export default class BottomNav extends Component {
-  defaultProps() {
-    return {
-    }
-  }
-
   render() {
     return (
       <View style={styles.wrapper}>
