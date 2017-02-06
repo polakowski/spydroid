@@ -34,7 +34,7 @@ export default class PlayersSetup extends Component {
   }
 
   goToMainMenu() {
-    this.props.nav.replace({ id: 'index' })
+    this.props.nav.resetTo({ id: 'index' })
   }
 
   createGame() {
@@ -52,7 +52,7 @@ export default class PlayersSetup extends Component {
     fetch(Env.SERVER_URI + '/api/games/', obj)
     .then((response) => response.json())
     .then((response) => {
-      this.props.nav.replace({ id: 'gameLobby', game: response.game, user: response.user })
+      this.props.nav.resetTo({ id: 'gameLobby', game: response.game, user: response.user })
     })
   }
 }

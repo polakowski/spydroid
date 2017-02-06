@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, ToastAndroid } from 'react-native';
 import SocketIO from 'react-native-socketio';
 
 import Title from '../components/Title'
@@ -38,7 +38,22 @@ export default class GameLobby extends Component {
       this.setState({ players: this.state.players })
       if (this.allPlayersReady(this.state.players)) {
         this.setState({ everyoneReady: true })
+        ToastAndroid.show('Everyone ready!', ToastAndroid.SHORT)
       }
+    })
+
+    this.socket.on('gameHasDied', (data) => {
+      Alert.alert(
+        'Info',
+        'The game has been deleted.',
+        [
+          { text: 'Ok', onPress: () => {
+            this.socket.disconnect()
+            this.props.nav.resetTo({ id: 'index' })
+          } },
+        ],
+        { cancelable: false }
+      )
     })
 
     if (!this.props.socket) {
@@ -61,6 +76,7 @@ export default class GameLobby extends Component {
         <Title text='Game lobby' />
         <Label text={tokenInfo} />
         { this.actionButton() }
+        { this.leaveGameButton() }
         <LobbyPlayersList players={this.state.players} />
       </View>
     )
@@ -74,11 +90,50 @@ export default class GameLobby extends Component {
     }
   }
 
+  leaveGameButton() {
+    if (this.props.game.adminToken) {
+      return <CenterButton text='Delete game' onPress={this.deleteGame.bind(this)} type='danger' />
+    } else {
+      return <CenterButton text='Leave game' onPress={this.leaveGame.bind(this)} type='cancel' />
+    }
+  }
+
   getReady() {
     this.socket.emit('playerReady', {
       token: this.props.game.token,
       playerId: this.props.user.id
     })
+  }
+
+  leaveGame() {
+    Alert.alert(
+      'Leaving...',
+      'Are you sure you want to leave?',
+      [
+        { text: 'Nope', onPress: () => false },
+        { text: 'Yes', onPress: () => {
+          this.socket.emit('playerLeftLobby', {
+            token: this.props.game.token,
+            playerId: this.props.user.id
+          })
+          this.socket.disconnect()
+          this.props.nav.resetTo({ id: 'index' })
+        } },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  deleteGame() {
+    Alert.alert(
+      'Whoa, boi',
+      'Do you really want to delete this game?',
+      [
+        { text: 'Nope', onPress: () => false },
+        { text: 'Yes', onPress: () => this.socket.emit('adminGameDelete', { adminToken: this.props.game.adminToken }) },
+      ],
+      { cancelable: false }
+    )
   }
 
   allPlayersReady(players) {
@@ -96,7 +151,7 @@ export default class GameLobby extends Component {
       token: this.props.game.token,
       adminToken: this.props.game.adminToken
     }
-    this.props.nav.replace({ id: 'revealCard', socket: this.socket, game: game, user: this.props.user });
+    this.props.nav.resetTo({ id: 'revealCard', socket: this.socket, game: game, user: this.props.user });
   }
 
   createLobbySocket() {

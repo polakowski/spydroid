@@ -35,7 +35,7 @@ export default class RevealCard extends Component {
         'Info',
         'The game has ended.',
         [
-          { text: 'Go to lobby', onPress: () => this.props.nav.replace(lobbyRoute) },
+          { text: 'Go to lobby', onPress: () => this.props.nav.resetTo(lobbyRoute) },
         ],
         { cancelable: false }
       )
@@ -109,7 +109,7 @@ export default class RevealCard extends Component {
             playerId: this.props.user.id
           })
           this.socket.disconnect()
-          this.props.nav.replace({ id: 'index' })
+          this.props.nav.resetTo({ id: 'index' })
         } },
       ],
       { cancelable: false }

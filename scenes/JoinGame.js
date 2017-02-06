@@ -22,7 +22,7 @@ export default class JoinGame extends Component {
         <CustomInput label='Game access key' name='token' parent={this} />
         <CustomInput label='Your name' name='playerName' parent={this} />
         <CenterButton text='Join game' onPress={this.joinGame.bind(this)} disabled={this.btnDisabled} />
-        <CenterButton text='Back' onPress={() => this.props.nav.replace({ id: 'index' })} type='cancel' />
+        <CenterButton text='Back' onPress={() => this.props.nav.resetTo({ id: 'index' })} type='cancel' />
       </View>
     )
   }
@@ -45,7 +45,7 @@ export default class JoinGame extends Component {
     .then((response) => response.json())
     .then((response) => {
       if (!response.error) {
-        this.props.nav.replace({ id: 'gameLobby', game: response.game, user: response.user })
+        this.props.nav.resetTo({ id: 'gameLobby', game: response.game, user: response.user })
       } else {
         Alert.alert('Error', response.error)
         this.setState({ btnDisabled: false })
