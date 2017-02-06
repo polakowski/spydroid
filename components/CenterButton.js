@@ -29,5 +29,6 @@ const styles = StyleSheet.create({
 
 const colors = {
   primary: '#2095f2',
-  cancel: '#9d9d9d'
+  cancel: '#9d9d9d',
+  danger: '#e84526'
 }

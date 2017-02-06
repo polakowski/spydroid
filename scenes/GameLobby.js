@@ -39,10 +39,13 @@ export default class GameLobby extends Component {
     })
 
     this.socket.on('playerReady', (data) => {
-      // let player = this.state.players.find((player) => { return player.id == data[0].playerId })
-      // player.ready = true
-      // if (player.id == this.props.user.id) { this.setState({ ready: true }) }
-      // this.setState({ players: this.state.players })
+      let player = this.state.players.find((player) => { return player.id == data[0].playerId })
+      player.ready = true
+      if (player.id == this.props.user.id) { this.setState({ ready: true }) }
+      this.setState({ players: this.state.players })
+      if (this.allPlayersReady(this.state.players)) {
+        this.setState({ everyoneReady: true })
+      }
     })
   }
 
@@ -71,6 +74,10 @@ export default class GameLobby extends Component {
       token: this.props.game.token,
       playerId: this.props.user.id
     })
+  }
+
+  allPlayersReady(players) {
+    return _.all(players, (player) => player.ready)
   }
 
   adminGameStart() {
