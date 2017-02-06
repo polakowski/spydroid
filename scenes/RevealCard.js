@@ -17,6 +17,33 @@ export default class RevealCard extends Component {
 
   componentWillMount() {
     this.setState({ cardContent: this.cardContent.bind(this)() })
+    this.socket = this.props.socket
+    this.socket.on('playersInGame', (data) => true)
+    this.socket.on('gameHasStarted', (data) => true)
+    this.socket.on('playerReady', (data) => true)
+  }
+
+  componentDidMount() {
+    this.socket.on('gameHasEnded', (data) => {
+      let lobbyRoute = {
+        id: 'gameLobby',
+        game: this.props.game,
+        user: this.props.user,
+        socket: this.socket
+      }
+      Alert.alert(
+        'Info',
+        'The game has ended.',
+        [
+          { text: 'Go to lobby', onPress: () => this.props.nav.replace(lobbyRoute) },
+        ],
+        { cancelable: false }
+      )
+    })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId)
   }
 
   render() {
@@ -26,7 +53,7 @@ export default class RevealCard extends Component {
         <Label text='Press the button below to reveal your card.'/>
         <CenterButton text={this.state.buttonText} onPress={this.revealCard.bind(this)} type='primary' disabled={this.state.btnDisabled}/>
         <GameCard revealed={this.state.cardRevealed} content={this.state.cardContent} />
-        <CenterButton text='Leave game' onPress={this.leaveGame.bind(this)} type='danger' />
+        { this.leaveGameButton() }
       </View>
     )
   }
@@ -55,10 +82,18 @@ export default class RevealCard extends Component {
   }
 
   cardContent() {
-    if (this.props.gameData.isSpy) {
+    if (this.props.game.isSpy) {
       return 'You are a SPY'
     } else {
-      return this.props.gameData.placeName;
+      return this.props.game.placeName;
+    }
+  }
+
+  leaveGameButton() {
+    if (this.props.game.adminToken) {
+      return <CenterButton text='End game' onPress={this.endGame.bind(this)} type='danger' />
+    } else {
+      return <CenterButton text='Leave game' onPress={this.leaveGame.bind(this)} type='cancel' />
     }
   }
 
@@ -68,7 +103,26 @@ export default class RevealCard extends Component {
       'Are you sure you want to leave?',
       [
         { text: 'Nope', onPress: () => false },
-        { text: 'Yes', onPress: () => this.props.nav.replace({ id: 'index' }) },
+        { text: 'Yes', onPress: () => {
+          this.socket.emit('playerLeftGame', {
+            token: this.props.game.token,
+            playerId: this.props.user.id
+          })
+          this.socket.disconnect()
+          this.props.nav.replace({ id: 'index' })
+        } },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  endGame() {
+    Alert.alert(
+      'Whoa, boi',
+      'Do you really want to end this game?',
+      [
+        { text: 'Nope', onPress: () => false },
+        { text: 'Yes', onPress: () => this.props.socket.emit('adminGameEnd', { adminToken: this.props.game.adminToken }) },
       ],
       { cancelable: false }
     )

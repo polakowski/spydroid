@@ -21,14 +21,7 @@ export default class GameLobby extends Component {
   }
 
   componentDidMount() {
-    this.socket = new SocketIO(Env.SERVER_URI);
-    this.socket.connect();
-
-    this.socket.emit('playerJoinedGame', {
-      token: this.props.game.token,
-      playerName: this.props.user.name,
-      playerId: this.props.user.id
-    })
+    this.socket = this.props.socket || this.createLobbySocket()
 
     this.socket.on('gameHasStarted', (data) => {
       this.gameHasStarted(data[0])
@@ -47,6 +40,18 @@ export default class GameLobby extends Component {
         this.setState({ everyoneReady: true })
       }
     })
+
+    if (!this.props.socket) {
+      this.socket.emit('playerJoinedGame', {
+        token: this.props.game.token,
+        playerName: this.props.user.name,
+        playerId: this.props.user.id
+      })
+    } else {
+      this.socket.emit('playerJoinedLobby', {
+        token: this.props.game.token
+      })
+    }
   }
 
   render() {
@@ -85,10 +90,19 @@ export default class GameLobby extends Component {
   }
 
   gameHasStarted(data) {
-    var placeName = data.placeName;
-    var isSpy = data.isSpy;
-    var gameData = { placeName: placeName, isSpy: isSpy }
-    this.props.nav.replace({ id: 'revealCard', socket: this.socket, gameData: gameData });
+    var game = {
+      placeName: data.placeName,
+      isSpy: data.isSpy,
+      token: this.props.game.token,
+      adminToken: this.props.game.adminToken
+    }
+    this.props.nav.replace({ id: 'revealCard', socket: this.socket, game: game, user: this.props.user });
+  }
+
+  createLobbySocket() {
+    let socket = new SocketIO(Env.SERVER_URI);
+    socket.connect();
+    return socket;
   }
 }
 
