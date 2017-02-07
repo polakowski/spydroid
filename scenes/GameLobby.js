@@ -20,7 +20,7 @@ export default class GameLobby extends Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.socket = this.props.socket || this.createLobbySocket()
 
     this.socket.on('gameHasStarted', (data) => {
