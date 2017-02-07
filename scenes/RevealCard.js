@@ -18,12 +18,7 @@ export default class RevealCard extends Component {
   componentWillMount() {
     this.setState({ cardContent: this.cardContent.bind(this)() })
     this.socket = this.props.socket
-    this.socket.on('playersInGame', (data) => true)
-    this.socket.on('gameHasStarted', (data) => true)
-    this.socket.on('playerReady', (data) => true)
-  }
 
-  componentDidMount() {
     this.socket.on('gameHasEnded', (data) => {
       let lobbyRoute = {
         id: 'gameLobby',
@@ -31,6 +26,7 @@ export default class RevealCard extends Component {
         user: this.props.user,
         socket: this.socket
       }
+      this.socket.on('gameHasEnded', () => true)
       Alert.alert(
         'Info',
         'The game has ended.',
@@ -108,7 +104,7 @@ export default class RevealCard extends Component {
             token: this.props.game.token,
             playerId: this.props.user.id
           })
-          this.socket.disconnect()
+          this.socket.disable()
           this.props.nav.resetTo({ id: 'index' })
         } },
       ],

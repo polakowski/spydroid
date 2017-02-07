@@ -14,7 +14,7 @@ export default class MainScene extends Component {
       titles: {
         newGame: 'Create new game',
         joinGame: 'Join game',
-        exit: 'Quit Application'
+        credits: 'Credits'
       }
     };
   }
@@ -26,13 +26,20 @@ export default class MainScene extends Component {
         <Title text='Spydroid.' />
         <CenterButton text={titles.newGame} onPress={this.goToRoute.bind(this, 'newGame')} />
         <CenterButton text={titles.joinGame} onPress={this.goToRoute.bind(this, 'joinGame')} />
-        <CenterButton text={titles.exit} onPress={BackAndroid.exitApp} />
+        <CenterButton text={titles.credits} onPress={this.displayCredits.bind(this)} />
       </View>
     )
   }
 
   goToRoute = (newRoute) => {
     this.props.nav.resetTo({ id: newRoute });
+  }
+
+  displayCredits = () => {
+    Alert.alert(
+      'Credits',
+      "Application by Marek Polakowski\nBased on Spyfall game"
+    )
   }
 }
 

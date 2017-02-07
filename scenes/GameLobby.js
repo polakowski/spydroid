@@ -43,14 +43,13 @@ export default class GameLobby extends Component {
     })
 
     this.socket.on('gameHasDied', (data) => {
+      this.socket.disable()
+      this.props.nav.resetTo({ id: 'index' })
       Alert.alert(
         'Info',
         'The game has been deleted.',
         [
-          { text: 'Ok', onPress: () => {
-            this.socket.disconnect()
-            this.props.nav.resetTo({ id: 'index' })
-          } },
+          { text: 'Ok' },
         ],
         { cancelable: false }
       )
@@ -116,7 +115,7 @@ export default class GameLobby extends Component {
             token: this.props.game.token,
             playerId: this.props.user.id
           })
-          this.socket.disconnect()
+          this.socket.disable()
           this.props.nav.resetTo({ id: 'index' })
         } },
       ],
@@ -157,7 +156,17 @@ export default class GameLobby extends Component {
   createLobbySocket() {
     let socket = new SocketIO(Env.SERVER_URI);
     socket.connect();
+    socket.disable = this._disableSocket.bind(socket)
     return socket;
+  }
+
+  _disableSocket() {
+    this.disconnect()
+    this.on('gameHasStarted', () => true)
+    this.on('playersInGame', () => true)
+    this.on('playerReady', () => true)
+    this.on('gameHasDied', () => true)
+    console.log('socket disabled');
   }
 }
 
