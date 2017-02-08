@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BackAndroid, View, StyleSheet, Alert } from 'react-native';
+import { ToastAndroid, View, StyleSheet, Alert } from 'react-native';
 import SocketIO from 'react-native-socketio';
 
 import Title from '../components/Title';
@@ -14,7 +14,8 @@ export default class MainScene extends Component {
       titles: {
         newGame: 'Create new game',
         joinGame: 'Join game',
-        credits: 'Credits'
+        credits: 'Credits',
+        checkServer: 'Check server'
       }
     };
   }
@@ -26,7 +27,8 @@ export default class MainScene extends Component {
         <Title text='Spydroid.' />
         <CenterButton text={titles.newGame} onPress={this.goToRoute.bind(this, 'newGame')} />
         <CenterButton text={titles.joinGame} onPress={this.goToRoute.bind(this, 'joinGame')} />
-        <CenterButton text={titles.credits} onPress={this.displayCredits.bind(this)} />
+        <CenterButton text={titles.credits} onPress={this.displayCredits.bind(this)} type='cancel' />
+        <CenterButton text={titles.checkServer} onPress={this.checkServer.bind(this)} type='cancel' disabled={this.state.pingPending} />
       </View>
     )
   }
@@ -40,6 +42,18 @@ export default class MainScene extends Component {
       'Credits',
       "Application by Marek Polakowski\nBased on Spyfall game"
     )
+  }
+
+  checkServer = () => {
+    this.setState({ pingPending: true })
+    fetch(Env.SERVER_URI + '/api/status/')
+    .then((response) => response.json())
+    .then((response) => {
+      this.setState({ pingPending: false })
+      if (response === true) {
+        ToastAndroid.show('Server is up!', ToastAndroid.LONG)
+      }
+    })
   }
 }
 

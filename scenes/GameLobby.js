@@ -166,7 +166,6 @@ export default class GameLobby extends Component {
     this.on('playersInGame', () => true)
     this.on('playerReady', () => true)
     this.on('gameHasDied', () => true)
-    console.log('socket disabled');
   }
 }
 
